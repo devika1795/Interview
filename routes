@@ -1,0 +1,11 @@
+module.exports = router;
+var express = require("express");
+var router = express.Router();
+var passport = require("passport");
+require("../config/passport")(passport);
+const operations = require("../controllers/operations");
+
+router.route("/createProduct").post(operations.createProduct);
+router.route("/updateProduct").post(operations.updateProduct);
+router.route("/listProduct").get(operations.listProduct);
+router.route("/deleteProduct").get(operations.deleteProduct);
