@@ -3,7 +3,9 @@ var express = require("express");
 var router = express.Router();
 var passport = require("passport");
 require("../config/passport")(passport);
-const operations = require("../controllers/operations");
+const operations = require("../operations");
+var jwt = require("jsonwebtoken"); 
+
 
 router.route("/createProduct").post(operations.createProduct);
 router.route("/updateProduct").post(operations.updateProduct);
