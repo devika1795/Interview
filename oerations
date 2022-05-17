@@ -1,0 +1,113 @@
+const fs = require("fs"); // filesystem
+var models = require("../models");
+var sequelize = require('sequelize');
+var datas = {
+createProduct: function(req, res) {
+    try {
+      if (req.body.name == null || req.body.name == "") {
+        throw { err: "Product Name is Empty" };
+      }
+      if (req.body.price == null || req.body.price == "") {
+        throw { err: "Price is Empty" };
+      }
+      models.productDetail.create(req.body).then(
+        function(data) {
+          res.json({
+            status: "success",
+            data: data,
+            message: "Product created successfully"
+          });
+        },
+        function(err) {
+          res.json({
+            status: "failed",
+            data: err,
+            message: "Product could not be created.Please try again"
+          });
+        }
+      );
+    } catch (err) {
+      res.json({
+        status: "failed",
+        data: err,
+        message: "Unable to process Your request !"
+      });
+    }
+  },
+  updateProduct: function(req, res) {
+    try {
+      if (req.query.id == null || req.query.id == "") {
+        throw { err: "Id is Empty" };
+      }
+      models.productDetail
+        .update(req.body, {
+          where: { id: req.query.id }
+        })
+        .then(
+          function() {
+            res.json({
+              status: "success",
+              message: "Product updated successfully."
+            });
+          },
+          function(err) {
+            res.json({
+              status: "failed",
+              data: err,
+              message: "could not update Product.please try again"
+            });
+          }
+        );
+    } catch (err) {
+      res.json({
+        status: "failed",
+        data: err,
+        message: "Unable to process Your request !"
+      });
+    }
+  },
+  listProduct: function(req, res) {
+    let conditions = {};
+    if (req.query.id) {
+      conditions.where = { id: req.query.id };
+    }
+    models.productDetail.findAll(conditions).then(
+      function(data) {
+        res.json({
+          status: "success",
+          data: data,
+          message: "Product list fetched successfully."
+        });
+      },
+      function(err) {
+        res.json({
+          status: "failed",
+          data: err,
+          message: "could not fetch Product"
+        });
+      }
+    );
+  },
+  deleteProduct: function(req, res) {
+    models.productDetail
+      .destroy({
+        where: { id: req.query.id }
+      })
+      .then(
+        function() {
+          res.json({
+            status: "success",
+            message: "deleted successfully."
+          });
+        },
+        function(err) {
+          res.json({
+            status: "failed",
+            data: err,
+            message: "could not delete.please try again"
+          });
+        }
+      );
+  },
+};
+module.exports = datas;
